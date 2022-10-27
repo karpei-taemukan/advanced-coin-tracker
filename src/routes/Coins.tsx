@@ -75,7 +75,8 @@ function Coins(){
     const json = await response.json();   
   // console.log(json.slice(0, 100))
    setCoins(json.slice(0,100));
-   setTimeout(()=>{setLoading(false)}, 3000);
+   setLoading(false);
+   //setTimeout(()=>{setLoading(false)}, 3000);
     })()
 },[])
     return (
