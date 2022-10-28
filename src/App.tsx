@@ -72,7 +72,6 @@ time, mark, audio, video {
 
   a {
     text-decoration: none;
-    color: inherit;
   }
 `;
 //<></> : Fragment이다 일종의 유령 컴포넌트(부모 컴포넌트없이 서로 붙어있는 많은 것들을 리턴할 수 있게해준다)
