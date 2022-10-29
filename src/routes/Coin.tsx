@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Routes, Route, Link, useMatch } from 'react-router-dom';
 import Price from "./Price";
 import Chart from "./Chart";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCoinInfo,fetchCoinTickers } from "../api";
 
 const Title = styled.h1`
   font-size: 48px;
@@ -128,11 +130,11 @@ interface PriceData{
 }
 
 function Coin(){
-    const [loading, setLoading] = useState(true);
+   //const [loading, setLoading] = useState(true);
     const {coinId} = useParams();
     const {state} = useLocation();
-    const [info, setInfo] = useState<InfoData>();
-    const [priceInfo, setPriceInfo] = useState<PriceData>();
+   // const [info, setInfo] = useState<InfoData>();
+  //  const [priceInfo, setPriceInfo] = useState<PriceData>();
    // console.log(coinId)
    //const location = useLocation();
    //console.log(location);
@@ -143,7 +145,11 @@ console.log(priceMatch);
 const chartMatch = useMatch("/:coinId/chart");
 console.log(chartMatch);
 
-useEffect(()=>{
+
+
+const {isLoading: infoLoading, data: infoData} = useQuery<InfoData>(["info", coinId], ()=>fetchCoinInfo(coinId));
+const {isLoading: tickersLoading, data:tickersData} = useQuery<PriceData>(["ticker", coinId],()=>fetchCoinTickers(coinId));
+/*useEffect(()=>{
 (async()=>{
 const infoData = await (await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
 console.log(infoData);
@@ -156,16 +162,19 @@ setTag(infoData.team);
 setLoading(false);
 })()
 },[coinId]); // coinId는 URL 위치해서 component의 일생동안 바뀌지 않는다 그래서 useEffect에 []를 넣는것과 같음
+*/
+
+const loading = infoLoading || tickersLoading;
 
     return (
     <Container>
-        <Header>
-          <Title>{state?.name ? state.name : loading ? "Loading..." : info?.name}</Title>
+      {/*  <Header>
+         <Title>{state?.name ? state.name : loading ? "Loading..." : info?.name}</Title>
         </Header>
       <h2>{tag?.position}</h2>
      <h3>{info?.team.position}</h3>
       {/*<h3>{priceInfo?.price_usd}</h3>*/}
-        {loading ? <Loader>Loading...</Loader> : null}
+      {/*  {loading ? <Loader>Loading...</Loader> : null}
         <>
       <Overview>
       <OverviewItem>
@@ -180,7 +189,7 @@ setLoading(false);
         <span>circulating_supply:</span>
         <span>{priceInfo?.circulating_supply}</span>
         {/* priceInfo가 존재하는 경우에만 max_supply를 찾는다 */}
-      </OverviewItem>
+      {/*</OverviewItem>
       </Overview>
       <Description>
         <span>{info?.description}</span>
@@ -195,10 +204,50 @@ setLoading(false);
         <span>{info?.proof_type}</span>
       </OverviewItem>
       </Overview>
+
       {/*
       nestd route를 사용하기 때문에 버튼이 필요없고 URL만 바꾸면 된다
       URL에 따라 페이지를 re-render하지 않고 바꾸는 부분만 바꾼다
       */}
+
+   <Header>
+<Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
+        </Header>
+      <h2>{tag?.position}</h2>
+     <h3>{infoData?.team.position}</h3>
+        {loading ? <Loader>Loading...</Loader> : null}
+        <>
+      <Overview>
+      <OverviewItem>
+        <span>rank:</span>
+        <span>{tickersData?.rank}</span>
+        </OverviewItem>
+        <OverviewItem>
+        <span>symbol:</span>
+        <span>{tickersData?.symbol}</span>
+        </OverviewItem>
+        <OverviewItem>
+        <span>circulating_supply:</span>
+        <span>{tickersData?.circulating_supply}</span>
+
+      </OverviewItem>
+      </Overview>
+      <Description>
+        <span>{infoData?.description}</span>
+      </Description>
+      <Overview>
+        <OverviewItem>
+        <span>first_data_at:</span>
+        <span>{infoData?.first_data_at}</span>
+        </OverviewItem>
+        <OverviewItem>
+        <span>proof_type:</span>
+        <span>{infoData?.proof_type}</span>
+      </OverviewItem>
+      </Overview>
+
+
+
       <Tabs>
         <Tab isActive={priceMatch !== null}>
           <Link to="price">Price</Link>

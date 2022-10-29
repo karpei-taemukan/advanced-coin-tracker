@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useQuery } from '@tanstack/react-query'
+import { fetchCoins } from "../api";
+
 
 const Title = styled.h1`
 font-size: 40px;
@@ -55,7 +58,7 @@ height: 35px;
 margin-right: 20px;
 `;
 
-interface CoinInterface{
+interface ICoin{
 id: string,
 name: string,
 symbol: string,
@@ -67,7 +70,14 @@ type: string
 
 
 function Coins(){
-    const [coins, setCoins] = useState<CoinInterface[]>([]);
+const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins);
+//console.log(isLoading, data);
+    // useQuery는 isLoading 이라고 불리는 boolean 값을 return 한다   
+// Coin에서 Coins에서 올때 loading이 안보이는 건 useQuery가 data를 캐시에 저장하기 때문
+
+
+    //
+    /*const [coins, setCoins] = useState<CoinInterface[]>([]);
     const [loading,setLoading] = useState<boolean>(true);
     useEffect(()=>{
     (async () => { 
@@ -78,16 +88,26 @@ function Coins(){
    setLoading(false);
    //setTimeout(()=>{setLoading(false)}, 3000);
     })()
-},[])
+},[])*/
     return (
     <Container>
         <Header>
         <Title>Coins</Title>
         </Header>
-        {loading ?
+        {/*loading ?
          <Loading>Loading...</Loading> :
         <CoinList>
         {coins.map((coin) => 
+        <Coin key={coin.id}>
+        <Link to = {{pathname: `/${coin.id}`}} state={{name: coin.name}}>
+        <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />
+        {coin.name} &rarr;
+        </Link></Coin>)}
+        </CoinList>*/}
+         {isLoading ?
+         <Loading>Loading...</Loading> :
+        <CoinList>
+        {data?.slice(0,100).map((coin) => 
         <Coin key={coin.id}>
         <Link to = {{pathname: `/${coin.id}`}} state={{name: coin.name}}>
         <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />
