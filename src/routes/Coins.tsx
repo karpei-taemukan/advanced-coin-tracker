@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery } from '@tanstack/react-query'
 import { fetchCoins } from "../api";
-
+import {Helmet} from "react-helmet";
 
 const Title = styled.h1`
 font-size: 40px;
@@ -91,6 +91,12 @@ const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins);
 },[])*/
     return (
     <Container>
+         <Helmet>
+        <title>
+        Coins
+        </title>
+        <link rel="icon" href="https://w7.pngwing.com/pngs/210/596/png-transparent-upbit-hd-logo.png" />
+      </Helmet>
         <Header>
         <Title>Coins</Title>
         </Header>

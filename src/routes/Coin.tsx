@@ -6,6 +6,7 @@ import Price from "./Price";
 import Chart from "./Chart";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoinInfo,fetchCoinTickers } from "../api";
+import {Helmet} from "react-helmet";
 
 const Title = styled.h1`
   font-size: 48px;
@@ -75,6 +76,23 @@ border-radius: 10px;
 a{
   display: block;
   color: ${(props) => props.isActive ? props.theme.accentColor : props.theme.textColor}
+}
+`;
+
+const Back = styled.div`
+background-color: #1C1D1E;
+text-transform: uppercase;
+text-align: center;
+padding: 20px;
+border-radius: 10px;
+margin-bottom: 10px;
+a{
+  color: ${(props) => props.theme.textColor}
+}
+&:hover{
+  a{
+      color: ${props => props.theme.accentColor}
+  } 
 }
 `;
 
@@ -148,7 +166,7 @@ console.log(chartMatch);
 
 
 const {isLoading: infoLoading, data: infoData} = useQuery<InfoData>(["info", coinId], ()=>fetchCoinInfo(coinId));
-const {isLoading: tickersLoading, data:tickersData} = useQuery<PriceData>(["ticker", coinId],()=>fetchCoinTickers(coinId));
+const {isLoading: tickersLoading, data:tickersData} = useQuery<PriceData>(["ticker", coinId],()=>fetchCoinTickers(coinId), {refetchInterval: 5000});
 /*useEffect(()=>{
 (async()=>{
 const infoData = await (await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
@@ -168,6 +186,12 @@ const loading = infoLoading || tickersLoading;
 
     return (
     <Container>
+      <Helmet>
+        <title>
+        {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </title>
+        <link rel="icon" href="https://w7.pngwing.com/pngs/210/596/png-transparent-upbit-hd-logo.png" />
+      </Helmet>
       {/*  <Header>
          <Title>{state?.name ? state.name : loading ? "Loading..." : info?.name}</Title>
         </Header>
@@ -215,6 +239,7 @@ const loading = infoLoading || tickersLoading;
         </Header>
       <h2>{tag?.position}</h2>
      <h3>{infoData?.team.position}</h3>
+     <Back><Link to="/">Back &rarr;</Link></Back>
         {loading ? <Loader>Loading...</Loader> : null}
         <>
       <Overview>
@@ -258,7 +283,7 @@ const loading = infoLoading || tickersLoading;
       </Tabs>
    
       <Routes>
-      <Route path="price" element={<Price />}/>
+      <Route path="price" element={<Price coinId={coinId}/>}/>
        <Route path="chart" element={<Chart coinId={coinId}/>}/> 
       </Routes>
       </>

@@ -19,7 +19,7 @@ market_cap: number;
 }
 
 function Chart({coinId}:ChartProp){
-const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId))
+const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {refetchInterval: 5000})
    // IHistorical[]: data가 IHistorical의 array이다 
 
    return (
