@@ -68,9 +68,17 @@ is_active: boolean,
 type: string
 }
 
+interface IUpbitCoin{
+market: string,
+korean_name: string,
+english_name: string,
+//includes(arg0: string): unknown;
+}
 
 function Coins(){
+    
 const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins);
+
 //console.log(isLoading, data);
     // useQuery는 isLoading 이라고 불리는 boolean 값을 return 한다   
 // Coin에서 Coins에서 올때 loading이 안보이는 건 useQuery가 data를 캐시에 저장하기 때문
@@ -119,6 +127,7 @@ const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins);
         <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />
         {coin.name} &rarr;
         </Link></Coin>)}
+      
         </CoinList>}
     </Container>)
 }

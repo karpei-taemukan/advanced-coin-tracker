@@ -5,7 +5,7 @@ import { Routes, Route, Link, useMatch } from 'react-router-dom';
 import Price from "./Price";
 import Chart from "./Chart";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCoinInfo,fetchCoinTickers } from "../api";
+import { fetchCoinInfo,fetchCoinTickers} from "../api";
 import {Helmet} from "react-helmet";
 
 const Title = styled.h1`
@@ -147,12 +147,56 @@ interface PriceData{
   last_updated: string;
 }
 
+interface upbitPriceData{
+  market:string;
+  trade_date:string;
+  trade_time:string;
+  trade_date_kst:string;
+  trade_time_kst:string;
+  trade_timestamp:number;
+  opening_price:number;
+  high_price:number;
+  low_price:number;
+  trade_price:number;
+  prev_closing_price:number;
+  change:string;
+  change_price:number;
+  change_rate:number;
+  signed_change_price:number;
+  signed_change_rate:number;
+  trade_volume:number;
+  acc_trade_price:number;
+  acc_trade_price_24h:number;
+  acc_trade_volume:number;
+  acc_trade_volume_24h:number;
+  highest_52_week_price:number;
+  highest_52_week_date:string;
+  lowest_52_week_price:number;
+  lowest_52_week_date:string;
+  timestamp:number;
+}
+
+interface upbitChartData{
+
+  market:string;
+  candle_date_time_utc:string;
+  candle_date_time_kst:string;
+  opening_price:number;
+  high_price:number;
+  low_price:number;
+  trade_price:number;
+  timestamp:number;
+  candle_acc_trade_price: number;
+  candle_acc_trade_volume: number;
+  unit: number;
+}
+
 function Coin(){
    //const [loading, setLoading] = useState(true);
     const {coinId} = useParams();
     const {state} = useLocation();
-   // const [info, setInfo] = useState<InfoData>();
-  //  const [priceInfo, setPriceInfo] = useState<PriceData>();
+  // const [info, setInfo] = useState<InfoData>();
+  // const [priceInfo, setPriceInfo] = useState<PriceData>();
    // console.log(coinId)
    //const location = useLocation();
    //console.log(location);
@@ -163,10 +207,14 @@ console.log(priceMatch);
 const chartMatch = useMatch("/:coinId/chart");
 console.log(chartMatch);
 
-
+//console.log(state.name)
+console.log(coinId)
 
 const {isLoading: infoLoading, data: infoData} = useQuery<InfoData>(["info", coinId], ()=>fetchCoinInfo(coinId));
 const {isLoading: tickersLoading, data:tickersData} = useQuery<PriceData>(["ticker", coinId],()=>fetchCoinTickers(coinId), {refetchInterval: 5000});
+
+
+
 /*useEffect(()=>{
 (async()=>{
 const infoData = await (await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
@@ -182,13 +230,17 @@ setLoading(false);
 },[coinId]); // coinId는 URL 위치해서 component의 일생동안 바뀌지 않는다 그래서 useEffect에 []를 넣는것과 같음
 */
 
+
+
 const loading = infoLoading || tickersLoading;
+
 
     return (
     <Container>
       <Helmet>
         <title>
-        {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+     {state?.name ? state.name : loading ? "Loading..." : infoData?.name} 
+
         </title>
         <link rel="icon" href="https://w7.pngwing.com/pngs/210/596/png-transparent-upbit-hd-logo.png" />
       </Helmet>
@@ -198,49 +250,7 @@ const loading = infoLoading || tickersLoading;
       <h2>{tag?.position}</h2>
      <h3>{info?.team.position}</h3>
       {/*<h3>{priceInfo?.price_usd}</h3>*/}
-      {/*  {loading ? <Loader>Loading...</Loader> : null}
-        <>
-      <Overview>
-      <OverviewItem>
-        <span>rank:</span>
-        <span>{priceInfo?.rank}</span>
-        </OverviewItem>
-        <OverviewItem>
-        <span>symbol:</span>
-        <span>{priceInfo?.symbol}</span>
-        </OverviewItem>
-        <OverviewItem>
-        <span>circulating_supply:</span>
-        <span>{priceInfo?.circulating_supply}</span>
-        {/* priceInfo가 존재하는 경우에만 max_supply를 찾는다 */}
-      {/*</OverviewItem>
-      </Overview>
-      <Description>
-        <span>{info?.description}</span>
-      </Description>
-      <Overview>
-        <OverviewItem>
-        <span>first_data_at:</span>
-        <span>{info?.first_data_at}</span>
-        </OverviewItem>
-        <OverviewItem>
-        <span>proof_type:</span>
-        <span>{info?.proof_type}</span>
-      </OverviewItem>
-      </Overview>
-
-      {/*
-      nestd route를 사용하기 때문에 버튼이 필요없고 URL만 바꾸면 된다
-      URL에 따라 페이지를 re-render하지 않고 바꾸는 부분만 바꾼다
-      */}
-
-   <Header>
-<Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
-        </Header>
-      <h2>{tag?.position}</h2>
-     <h3>{infoData?.team.position}</h3>
-     <Back><Link to="/">Back &rarr;</Link></Back>
-        {loading ? <Loader>Loading...</Loader> : null}
+      {loading ? <Loader>Loading...</Loader> : null}
         <>
       <Overview>
       <OverviewItem>
@@ -254,7 +264,7 @@ const loading = infoLoading || tickersLoading;
         <OverviewItem>
         <span>circulating_supply:</span>
         <span>{tickersData?.circulating_supply}</span>
-
+        {/* priceInfo가 존재하는 경우에만 max_supply를 찾는다 */}
       </OverviewItem>
       </Overview>
       <Description>
@@ -271,7 +281,12 @@ const loading = infoLoading || tickersLoading;
       </OverviewItem>
       </Overview>
 
+      {/*
+      nestd route를 사용하기 때문에 버튼이 필요없고 URL만 바꾸면 된다
+      URL에 따라 페이지를 re-render하지 않고 바꾸는 부분만 바꾼다
+      */}
 
+  
 
       <Tabs>
         <Tab isActive={priceMatch !== null}>
