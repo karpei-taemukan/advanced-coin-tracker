@@ -240,15 +240,14 @@ const loading = infoLoading || tickersLoading;
       <Helmet>
         <title>
      {state?.name ? state.name : loading ? "Loading..." : infoData?.name} 
-
         </title>
         <link rel="icon" href="https://w7.pngwing.com/pngs/210/596/png-transparent-upbit-hd-logo.png" />
       </Helmet>
-      {/*  <Header>
-         <Title>{state?.name ? state.name : loading ? "Loading..." : info?.name}</Title>
+       <Header>
+         <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
         </Header>
       <h2>{tag?.position}</h2>
-     <h3>{info?.team.position}</h3>
+     <h3>{infoData?.team.position}</h3>
       {/*<h3>{priceInfo?.price_usd}</h3>*/}
       {loading ? <Loader>Loading...</Loader> : null}
         <>

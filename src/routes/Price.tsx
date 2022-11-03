@@ -20,29 +20,36 @@ market_cap: number;
 
 const OverView = styled.div`
 width: 450px;
-height: 1000px;
+height: 100%;
 background-color: #1C1D1E;
 border-radius: 15px;
-display: flex;
-flex-direction: column;
 padding: 0 5%;
+display: flex;
+justify-content: space-around;
 `;
 
 const OverViewItem = styled.div`
 color: #E0EAF6;
 display: flex;
 flex-direction: column;
-justify-content: space-around;
-align-items: center;
+`;
+
+const Span = styled.span`
 `;
 
 function Price({coinId}:PriceProp){
     const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {refetchInterval: 5000})
+    console.log(data)
     return (
     <>
     <OverView>
         <OverViewItem>
-        <span>{data?.map((i) => i.open)}</span>
+            <h1>Time_Open</h1>
+        <Span>{data?.map((i,index) => (<h2 key={index}>{i.high}</h2>))}</Span>
+        </OverViewItem>
+        <OverViewItem>
+            <h1>Time_Close</h1>
+        <Span>{data?.map((i,index) => (<h2 key={index}>{i.low}</h2>))}</Span>
         </OverViewItem>
     </OverView>
     </>)
