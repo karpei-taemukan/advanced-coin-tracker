@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { createGlobalStyle } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import {ThemeProvider} from "styled-components";
+import {darkTheme, lightTheme} from "./theme";
+import {useRecoilValue} from "recoil";
+import { isDarkAtom } from "./atom";
 
 
 const GlobalStyle = createGlobalStyle`
@@ -79,12 +83,27 @@ time, mark, audio, video {
 //<></> : Fragment이다 일종의 유령 컴포넌트(부모 컴포넌트없이 서로 붙어있는 많은 것들을 리턴할 수 있게해준다)
 
 function App() {
+/*const [isDark, setIsDark] = useState(false);
+const toggleDark = () => {
+setIsDark((current) => !current);
+} */
 
-  return (
+
+const isDark = useRecoilValue(isDarkAtom);
+
+
+ /*
+ Global state는 어플리케이션이 특정 value(isDark, toggleDark)에 접근 해야할때 사용
+ */
+return (
     <>
+     <ThemeProvider theme={isDark? darkTheme : lightTheme}>
       <GlobalStyle />
-      <Router />
-      <ReactQueryDevtools initialIsOpen={false} />
+      <Router /*isDark={isDark} toggleDark={toggleDark} *//>
+      {/* Coins는 Router 내부에 있다
+      */}
+      <ReactQueryDevtools initialIsOpen={true} />
+      </ThemeProvider>
     </>
   );
 }

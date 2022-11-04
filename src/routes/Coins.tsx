@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { useQuery } from '@tanstack/react-query'
 import { fetchCoins } from "../api";
 import {Helmet} from "react-helmet";
+import { useSetRecoilState } from "recoil";
+import {isDarkAtom} from "../atom";
+
 
 const Title = styled.h1`
 font-size: 40px;
@@ -26,11 +29,13 @@ align-items: center;
 const CoinList = styled.ul``;
 
 const Coin =  styled.li`
-background-color: white;
-color: ${props => props.theme.bgColor};
+background-color: ${props => props.theme.bgColor};
+border-color: red;
+color: ${props => props.theme.textColor};
 margin-bottom: 10px;
 border-radius: 15px;
 text-align: center;
+border: 1px solid ${props => props.theme.textColor};
 a{
     display: flex;
     align-items: center;
@@ -68,15 +73,16 @@ is_active: boolean,
 type: string
 }
 
-interface IUpbitCoin{
-market: string,
-korean_name: string,
-english_name: string,
-//includes(arg0: string): unknown;
+interface ICoinsProps{
+ /*   toggleDark: ()=>void;*/
 }
 
-function Coins(){
-    
+function Coins({/*toggleDark*/}:ICoinsProps){
+
+    const setDarkAtom = useSetRecoilState(isDarkAtom);
+    const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+
+
 const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins);
 
 //console.log(isLoading, data);
@@ -107,6 +113,7 @@ const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins);
       </Helmet>
         <Header>
         <Title>Coins</Title>
+        <button /*onClick={toggleDark}*/onClick={toggleDarkAtom}>Toggle</button>
         </Header>
         {/*loading ?
          <Loading>Loading...</Loading> :

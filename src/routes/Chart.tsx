@@ -2,9 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import {fetchCoinHistory} from "../api";
 import ApexChart from "react-apexcharts";
 import styled from "styled-components";
+import {useRecoilValue} from "recoil";
+import { isDarkAtom } from "../atom";
 
 interface ChartProp{
     coinId: string | undefined;
+  /*  isDark: boolean; */
 }
 
 
@@ -20,7 +23,8 @@ market_cap: number;
 }
 
 
-function Chart({coinId}:ChartProp){
+function Chart({coinId/*, isDark*/}:ChartProp){
+    const isDark = useRecoilValue(isDarkAtom);
 const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {refetchInterval: 5000})
    // IHistorical[]: data가 IHistorical의 array이다 
 console.log(data);
@@ -45,7 +49,8 @@ data: datas
 }
 options={{
   theme:{
-    mode: "dark"
+   mode: isDark ? "dark" : "light"
+
   },
     chart:{
     height: 500,
