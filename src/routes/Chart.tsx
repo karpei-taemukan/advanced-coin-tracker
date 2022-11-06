@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import {fetchCoinHistory} from "../api";
 import ApexChart from "react-apexcharts";
 import styled from "styled-components";
-import {useRecoilValue} from "recoil";
-import { isDarkAtom } from "../atom";
+import {useRecoilValue, useSetRecoilState} from "recoil";
+import { isDarkAtom, TwoChart } from "../atom";
 
 interface ChartProp{
     coinId: string | undefined;
@@ -22,9 +22,17 @@ volume: string;
 market_cap: number;
 }
 
+const ChangeBtn = styled.button`
+width: 70px;
+height: 20px;
+`
 
 function Chart({coinId/*, isDark*/}:ChartProp){
-    const isDark = useRecoilValue(isDarkAtom);
+const isDark = useRecoilValue(isDarkAtom);
+const chooseChart = useSetRecoilState(TwoChart);
+const changeChart = () => chooseChart((prev) => !prev);
+const twoChart = useRecoilValue(TwoChart);
+
 const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {refetchInterval: 5000})
    // IHistorical[]: data가 IHistorical의 array이다 
 console.log(data);
@@ -35,62 +43,10 @@ const datas = data?.map(i => ({
    return (
    <>
    
-   {isLoading ? "Loading chart" : 
+   <ChangeBtn onClick={changeChart}>Change</ChangeBtn>
+   {isLoading ? "Loading chart" : twoChart ? 
   
-<ApexChart 
-type="candlestick" 
-series={
-[
-{  
-name: coinId,
-data: datas
-}
-]
-}
-options={{
-  theme:{
-   mode: isDark ? "dark" : "light"
-
-  },
-    chart:{
-    height: 500,
-    width: 500,
-    },
-     xaxis:{
-        type: "datetime",
-        categories: data?.map((price) =>
-        new Date(price.time_close * 1000).toUTCString()
-      ),
-        labels:{
-            style: {
-                colors: "blue",
-                fontSize: '12px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 400,
-                cssClass: 'apexcharts-xaxis-label',
-            },
-        }
-     },
-     yaxis:{
-        tooltip: {
-            enabled: true
-          },
-      labels: {
-        show: true,
-        style: {
-            colors: "red",
-            fontSize: '12px',
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            fontWeight: 400,
-            cssClass: 'apexcharts-yaxis-label',
-        },
-      }
-     }
-     
-    }} 
-/>}
-</>)
-{/*<ApexChart 
+<ApexChart
    type="line" 
    series={[
 {
@@ -100,7 +56,7 @@ options={{
 ]}
 options={{
 theme: {
-mode: 'dark', 
+    mode: isDark ? "dark" : "light", 
 }, 
 xaxis: {
     categories: data?.map((price) => new Date(price.time_close*1000).toUTCString().substring(5,25)) ?? [],
@@ -158,10 +114,78 @@ stroke: {
 }
 }
 />
-}
 
+
+:
+
+<ApexChart 
+type="candlestick" 
+series={
+[
+{  
+name: coinId,
+data: datas
+}
+]
+}
+options={{
+  theme:{
+   mode: isDark ? "dark" : "light"
+
+  },
+    chart:{
+    height: 500,
+    width: 500,
+    },
+     xaxis:{
+        type: "datetime",
+        categories: data?.map((price) =>
+        new Date(price.time_close * 1000).toUTCString(),
+        
+      ),
+        labels:{
+            style: {
+                colors: "blue",
+                fontSize: '12px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 400,
+                cssClass: 'apexcharts-xaxis-label',
+            },
+        }
+     },
+     yaxis:{
+        tooltip: {
+            enabled: true
+          },
+      labels: {
+        show: true,
+        style: {
+            colors: "red",
+            fontSize: '12px',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontWeight: 400,
+            cssClass: 'apexcharts-yaxis-label',
+        },
+      }
+     },
+
+     plotOptions: {
+        candlestick: {
+          colors: {
+            upward: '#00B746',
+            downward: '#EF403C'
+          },
+          wick: {
+            useFillColor: true
+          }
+        }
+    }
+    
+    }} 
+/>
+}
 </>)
-*/}
+
 } 
 
 export default Chart;
