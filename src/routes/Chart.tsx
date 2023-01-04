@@ -4,6 +4,7 @@ import ApexChart from "react-apexcharts";
 import styled from "styled-components";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import { isDarkAtom, TwoChart } from "../atom";
+import { useState } from "react";
 
 interface ChartProp{
     coinId: string | undefined;
@@ -25,12 +26,22 @@ market_cap: number;
 const ChangeBtn = styled.button`
 width: 70px;
 height: 20px;
-`
+border: none;
+border-radius: 15px;
+font-family: Georgia, serif;
+margin-left: 40%;
+margin-bottom: 5%;
+`;
 
 function Chart({coinId/*, isDark*/}:ChartProp){
 const isDark = useRecoilValue(isDarkAtom);
 const chooseChart = useSetRecoilState(TwoChart);
-const changeChart = () => chooseChart((prev) => !prev);
+const [chartChange, setChatChange] = useState(false);
+
+const changeChart = () => {
+  chooseChart((prev) => !prev);
+  setChatChange((prev) => !prev);
+};
 const twoChart = useRecoilValue(TwoChart);
 
 const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {refetchInterval: 5000})
@@ -43,7 +54,14 @@ const datas = data?.map(i => ({
    return (
    <>
    
-   <ChangeBtn onClick={changeChart}>Change</ChangeBtn>
+   {chartChange ? 
+   <ChangeBtn 
+   style={{boxShadow: "10px 5px 5px black"}} 
+   onClick={changeChart}>Line</ChangeBtn> 
+   : 
+   <ChangeBtn
+   style={{boxShadow: "10px 5px 5px black"}}
+    onClick={changeChart}>Candle</ChangeBtn>}
    {isLoading ? "Loading chart" : twoChart ? 
   
 <ApexChart

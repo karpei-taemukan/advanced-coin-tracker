@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import {fetchCoinHistory} from "../api";
@@ -38,15 +39,19 @@ const Span = styled.span`
 `;
 
 function Price({coinId}:PriceProp){
-    const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {refetchInterval: 5000})
-    console.log(data)
+
+    const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {refetchInterval: 5000, onError: ()=>{
+        console.log("Error")
+    }})
+    console.log(data);
+
     return (
     <>
     <OverView>
-        <OverViewItem>
+    <OverViewItem>
             <h1>Time_Open</h1>
-        <Span>{data?.map((i,index) => (<h2 key={index}>{i.high}</h2>))}</Span>
-        </OverViewItem>
+<Span>{data?.map((i,index) => (<h2 key={index}>{i.high}</h2>))}</Span>
+</OverViewItem>
         <OverViewItem>
             <h1>Time_Close</h1>
         <Span>{data?.map((i,index) => (<h2 key={index}>{i.low}</h2>))}</Span>

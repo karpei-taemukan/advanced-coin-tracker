@@ -9,6 +9,7 @@ import { fetchCoinInfo,fetchCoinTickers} from "../api";
 import {Helmet} from "react-helmet";
 import { useSetRecoilState } from "recoil";
 import {isDarkAtom} from "../atom";
+import { info } from "console";
 
 const Title = styled.h1`
   font-size: 48px;
@@ -31,6 +32,7 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: Georgia, serif;
 `;
 
 const Overview = styled.div`
@@ -46,6 +48,7 @@ span:first-child{
   font-weight: 400;
   text-transform: uppercase;
 }
+margin-top: 10%;
 `;
 
 const OverviewItem = styled.div`
@@ -97,6 +100,18 @@ a{
   } 
 }
 `;
+
+
+const ToggleDarkmode = styled.button`
+width: 7%;
+height: 5%;
+border: none;
+border-radius: 15px;
+position: absolute;
+top: 15%;
+font-family: Georgia, serif;
+`;
+
 
 interface ITag{
   id: string,
@@ -157,9 +172,14 @@ interface ICoinProps{
 
 function Coin({/*toggleDark, isDark*/}:ICoinProps){
 
+const [isDark, setIsDark] = useState(false);
 
 const setDarkAtom = useSetRecoilState(isDarkAtom);
-const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+const toggleDarkAtom = () => {
+  setDarkAtom((prev) => !prev)
+  setIsDark((prev) => !prev)
+};
+
 
 
    //const [loading, setLoading] = useState(true);
@@ -173,14 +193,15 @@ const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
 const [tag, setTag] = useState<ITag>();
 // useMatch 유저가 특정 URL에 있는 지의 여부를 알려줌
 const priceMatch = useMatch("/:coinId/price");
-console.log(priceMatch);
+//console.log(priceMatch);
 const chartMatch = useMatch("/:coinId/chart");
-console.log(chartMatch);
+//console.log(chartMatch);
 
 //console.log(state.name)
-console.log(coinId)
+//console.log(coinId)
 
 const {isLoading: infoLoading, data: infoData} = useQuery<InfoData>(["info", coinId], ()=>fetchCoinInfo(coinId));
+
 const {isLoading: tickersLoading, data:tickersData} = useQuery<PriceData>(["ticker", coinId],()=>fetchCoinTickers(coinId), {refetchInterval: 5000});
 
 
@@ -215,7 +236,14 @@ const loading = infoLoading || tickersLoading;
       </Helmet>
        <Header>
          <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
-         <button /*onClick={toggleDark}*/onClick={toggleDarkAtom}>Toggle</button>
+         {isDark ? 
+         <ToggleDarkmode 
+         style={{backgroundColor: "black", boxShadow: "10px 5px 5px black" ,color: "white"}} 
+         onClick={toggleDarkAtom}>Dark</ToggleDarkmode> 
+         : 
+         <ToggleDarkmode style={{boxShadow: "10px 5px 5px black"}}
+          onClick={toggleDarkAtom}>Light</ToggleDarkmode>}
+         
         </Header>
       <h2>{tag?.position}</h2>
      <h3>{infoData?.team.position}</h3>

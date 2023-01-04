@@ -24,9 +24,13 @@ height: 15vh;
 display: flex;
 justify-content: center;
 align-items: center;
+font-family: Georgia, serif;
 `;
 
-const CoinList = styled.ul``;
+const CoinList = styled.ul`
+margin-top: 5%;
+font-family: Georgia, serif;
+`;
 
 const Coin =  styled.li`
 background-color: ${props => props.theme.bgColor};
@@ -63,6 +67,16 @@ height: 35px;
 margin-right: 20px;
 `;
 
+const ToggleDarkmode = styled.button`
+width: 7%;
+height: 5%;
+border: none;
+border-radius: 15px;
+position: absolute;
+top: 15%;
+font-family: Georgia, serif;
+`;
+
 interface ICoin{
 id: string,
 name: string,
@@ -80,7 +94,11 @@ interface ICoinsProps{
 function Coins({/*toggleDark*/}:ICoinsProps){
 
     const setDarkAtom = useSetRecoilState(isDarkAtom);
-    const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+    const [isDark, setIsDark] = useState(false);
+    const toggleDarkAtom = () => {
+        setDarkAtom((prev) => !prev);
+        setIsDark((prev) => !prev);
+    }
 
 
 const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins);
@@ -113,7 +131,13 @@ const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins);
       </Helmet>
         <Header>
         <Title>Coins</Title>
-        <button /*onClick={toggleDark}*/onClick={toggleDarkAtom}>Toggle</button>
+        {isDark ? 
+         <ToggleDarkmode 
+         style={{backgroundColor: "black", boxShadow: "10px 5px 5px black" ,color: "white"}} 
+         onClick={toggleDarkAtom}>Dark</ToggleDarkmode> 
+         : 
+         <ToggleDarkmode style={{boxShadow: "10px 5px 5px black"}}
+          onClick={toggleDarkAtom}>Light</ToggleDarkmode>}
         </Header>
         {/*loading ?
          <Loading>Loading...</Loading> :
