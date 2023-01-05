@@ -33,6 +33,10 @@ margin-left: 40%;
 margin-bottom: 5%;
 `;
 
+const NotFound = styled.h1`
+margin-left: 10%;
+`;
+
 function Chart({coinId/*, isDark*/}:ChartProp){
 const isDark = useRecoilValue(isDarkAtom);
 const chooseChart = useSetRecoilState(TwoChart);
@@ -44,13 +48,14 @@ const changeChart = () => {
 };
 const twoChart = useRecoilValue(TwoChart);
 
-const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {refetchInterval: 5000})
+const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {staleTime: Infinity,
+  cacheTime: Infinity})
    // IHistorical[]: data가 IHistorical의 array이다 
 console.log(data);
-const datas = data?.map(i => ({
+/*const datas = data?.map(i => ({
   x: new Date(i.time_open),
   y: [i.open, i.high, i.close, i.low]
-})) ?? [];
+})) ?? [];*/
    return (
    <>
    
@@ -62,7 +67,8 @@ const datas = data?.map(i => ({
    <ChangeBtn
    style={{boxShadow: "10px 5px 5px black"}}
     onClick={changeChart}>Candle</ChangeBtn>}
-   {isLoading ? "Loading chart" : twoChart ? 
+   
+  {data?.length === undefined ? <NotFound>Chart Data is not found</NotFound> : twoChart ? 
   
 <ApexChart
    type="line" 
@@ -131,7 +137,7 @@ stroke: {
 
 }
 }
-/>
+/> 
 
 
 :
@@ -142,7 +148,10 @@ series={
 [
 {  
 name: coinId,
-data: datas
+data: data?.map(i => ({
+  x: new Date(i.time_open),
+  y: [i.open, i.high, i.close, i.low]
+})) ?? []
 }
 ]
 }

@@ -40,22 +40,25 @@ const Span = styled.span`
 
 function Price({coinId}:PriceProp){
 
-    const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {refetchInterval: 5000, onError: ()=>{
-        console.log("Error")
-    }})
-    console.log(data);
+    const {data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId), {staleTime: Infinity,
+        cacheTime: Infinity})
+   
 
+// length로 data가 비어있는 지 확인
     return (
     <>
     <OverView>
-    <OverViewItem>
-            <h1>Time_Open</h1>
-<Span>{data?.map((i,index) => (<h2 key={index}>{i.high}</h2>))}</Span>
+ <OverViewItem>
+           <h1>Time_Open</h1>
+       { data?.length !== undefined ? <Span>{data?.map((i,index) => (
+           <h2 key={index}>{i.high}</h2>
+           ))}</Span> : <Span>Sorry, Price Data is not found</Span>}
 </OverViewItem>
         <OverViewItem>
             <h1>Time_Close</h1>
-        <Span>{data?.map((i,index) => (<h2 key={index}>{i.low}</h2>))}</Span>
+        { data?.length !== undefined ? <Span>{data?.map((i,index) => (<h2 key={index}>{i.low}</h2>))}</Span> : <Span>Sorry, Price Data is not found</Span>}
         </OverViewItem>
+        
     </OverView>
     </>)
 }
