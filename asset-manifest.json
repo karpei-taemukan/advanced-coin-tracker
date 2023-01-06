@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/karpei-taemukan/advanced-coin-tracker/static/js/main.06e9ffc9.js",
-    "index.html": "/karpei-taemukan/advanced-coin-tracker/index.html",
-    "main.06e9ffc9.js.map": "/karpei-taemukan/advanced-coin-tracker/static/js/main.06e9ffc9.js.map"
+    "main.js": "/advanced-coin-tracker/static/js/main.fef20fc8.js",
+    "index.html": "/advanced-coin-tracker/index.html",
+    "main.fef20fc8.js.map": "/advanced-coin-tracker/static/js/main.fef20fc8.js.map"
   },
   "entrypoints": [
-    "static/js/main.06e9ffc9.js"
+    "static/js/main.fef20fc8.js"
   ]
 }
