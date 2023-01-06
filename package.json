@@ -57,5 +57,5 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26"
   },
-  "homepage": "https://karpei-taemukan.github.io/advanced-coin-tracker"
+  "homepage": "https://karpeitaemukan.github.io/advanced-coin-tracker"
 }

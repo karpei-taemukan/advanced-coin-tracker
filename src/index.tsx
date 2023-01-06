@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {ThemeProvider} from "styled-components";
 import App from './App';
 import { RecoilRoot } from 'recoil';
+import { HashRouter } from 'react-router-dom';
 
 
 const queryClient = new QueryClient();
@@ -13,8 +14,9 @@ root.render(
 
     <RecoilRoot>
   <QueryClientProvider client={queryClient}>
-
-    <App />
+<HashRouter basename={process.env.PUBLIC_URL}>
+  <App />
+</HashRouter>
 
     </QueryClientProvider>
     </RecoilRoot>
