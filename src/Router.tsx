@@ -12,11 +12,11 @@ Props를 줄때마다 interface 생성
 */
 function Router({/*toggleDark,isDark*/}:IRouterProp){
 return (
-<HashRouter>
+<BrowserRouter basename={process.env.PUBLIC_URL}>
 <Routes>
 <Route path="/" element={<Coins /*toggleDark={toggleDark}*//>}/>
 <Route path="/:coinId/*" element={<Coin /*isDark={isDark} toggleDark={toggleDark}*//>}/>      
 </Routes>
-</HashRouter>
+</BrowserRouter>
 )}
 export default Router;
