@@ -13,7 +13,9 @@ root.render(
 
     <RecoilRoot>
   <QueryClientProvider client={queryClient}>
+
     <App />
+
     </QueryClientProvider>
     </RecoilRoot>
 
