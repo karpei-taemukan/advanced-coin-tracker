@@ -1,4 +1,5 @@
 {
+  "homepage": "https://karpei-taemukan.github.io/advanced-coin-tracker",
   "name": "upgrade-coin-tracker",
   "version": "0.1.0",
   "private": true,
@@ -31,8 +32,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build",
-    "predeploy": "npm run build"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -56,6 +57,5 @@
     "@types/react-helmet": "^6.1.5",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26"
-  },
-  "homepage": "https://karpeitaemukan.github.io/advanced-coin-tracker"
+  }
 }
