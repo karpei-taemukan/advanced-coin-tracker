@@ -1,5 +1,4 @@
 {
-  "homepage": "https://karpei-taemukan.github.io/advanced-coin-tracker",
   "name": "upgrade-coin-tracker",
   "version": "0.1.0",
   "private": true,
@@ -57,5 +56,6 @@
     "@types/react-helmet": "^6.1.5",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26"
-  }
+  },
+  "homepage": "https://karpei-taemukan.github.io/advanced-coin-tracker"
 }

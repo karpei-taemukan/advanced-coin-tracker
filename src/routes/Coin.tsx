@@ -246,7 +246,7 @@ const loading = infoLoading || tickersLoading;
          
         </Header>
       <h2>{tag?.position}</h2>
-     <h3>{infoData?.team.position}</h3>
+     {/*<h3>{infoData?.team.position}</h3>*/}
       {/*<h3>{priceInfo?.price_usd}</h3>*/}
       {loading ? <Loader>Loading...</Loader> : null}
         <>
